@@ -2,29 +2,38 @@ SYSTEM=unix
 WINDOW=ncurses
 
 HEADERS=main.h ../vendor/json/jsonxx.h
-LIBOBJS=map.o
-OBJLIST=main.o curses.o jsonxx.o $(LIBOBJS)
-OBJS=$(addprefix obj/, $(OBJLIST))
+OBJLIST=main.o curses.o jsonxx.o 
+LIB=libthp_static.a
+
+OBJDIR=obj
+LIBPATH=../lib/$(LIB)
+OBJS=$(addprefix $(OBJDIR)/, $(OBJLIST))
 
 CC=clang++
-CFLAGS=-Wextra --std=c++11 -stdlib=libc++ -c -O3 -g -D$(SYSTEM) -D$(WINDOW) -I../vendor -I../src/ -I. -Wdeprecated-writable-strings
+CFLAGS=-Wextra --std=c++11 -stdlib=libc++ -c -O3 -g -D$(SYSTEM) -D$(WINDOW) -I../vendor -I../lib -I. -Wdeprecated-writable-strings
 LD=clang++
 LDFLAGS=-lncurses -stdlib=libc++
 
-obj/%.o: %.cpp $(HEADERS)
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.cpp $(HEADERS) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o obj/$*.o
 
-obj/%.o: ../src/%.cpp $(HEADERS)
-	$(CC) $(CFLAGS) -c ../src/$< -o obj/$*.o
-
-obj/jsonxx.o: ../vendor/json/jsonxx.cc $(HEADERS)
+$(OBJDIR)/jsonxx.o: ../vendor/json/jsonxx.cc $(HEADERS)
 	$(CC) $(CFLAGS) -c ../vendor/json/jsonxx.cc -o obj/jsonxx.o
+	
+$(LIBPATH): .
+	@echo Rebuilding library...
+	( cd ../src; make all )
 
-interactive: $(OBJS) $(HEADERS)
-	$(LD) $(LDFLAGS) $(OBJS) -o itest
+interactive: $(OBJS)
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBPATH) -o itest
 
-all: interactive
+all: $(LIBPATH) interactive
 
 clean:
-	rm obj/*.o
-	rm itest
+	@rm -f $(OBJDIR)/*.o
+	@rm -f itest
+	-@rmdir $(OBJDIR) 2> /dev/null || true
+	( cd ../src; make all )

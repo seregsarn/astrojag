@@ -32,13 +32,13 @@ int main(void) {
     shared_ptr<MapTemplate> map = make_shared<MapTemplate>("fov.level");
 //plog("map(0,0): %c\n", map->at(0,0));
 //plog("map(1,1): %c\n", map->at(1,1));
-    you.x = 5; you.y = 5;
+    you.pos = Point(5,5);
     while (!quit) {
         clear();
         debugDraw(map.get());
-        move(you.y,you.x);
+        move(you.pos.y,you.pos.x);
         addch('@');
-        move(you.y,you.x);
+        move(you.pos.y,you.pos.x);
         refresh();
         c = getch();
         //fprintf(log, "key pressed: %o\n", c);
@@ -47,32 +47,32 @@ int main(void) {
                 quit = true;
                 break;
             case KEY_A1: case KEY_HOME:
-                if (you.y > 0) you.y -= 1;
-                if (you.x > 0) you.x -= 1;                
+                if (you.pos.y > 0) you.pos.y -= 1;
+                if (you.pos.x > 0) you.pos.x -= 1;                
                 break;
             case KEY_A3: case KEY_PPAGE:
-                if (you.y > 0) you.y -= 1;
-                if (you.x < 79) you.x += 1;                
+                if (you.pos.y > 0) you.pos.y -= 1;
+                if (you.pos.x < 79) you.pos.x += 1;                
                 break;
             case KEY_C1: case KEY_END:
-                if (you.y > 20) you.y += 1;
-                if (you.x > 0) you.x -= 1;                
+                if (you.pos.y > 20) you.pos.y += 1;
+                if (you.pos.x > 0) you.pos.x -= 1;                
                 break;
             case KEY_C3: case KEY_NPAGE:
-                if (you.y < 20) you.y += 1;
-                if (you.x < 79) you.x += 1;                
+                if (you.pos.y < 20) you.pos.y += 1;
+                if (you.pos.x < 79) you.pos.x += 1;                
                 break;
             case KEY_UP:
-                if (you.y > 0) you.y -= 1;
+                if (you.pos.y > 0) you.pos.y -= 1;
                 break;
             case KEY_DOWN:
-                if (you.y < 20) you.y += 1;
+                if (you.pos.y < 20) you.pos.y += 1;
                 break;
             case KEY_LEFT:
-                if (you.x > 0) you.x -= 1;
+                if (you.pos.x > 0) you.pos.x -= 1;
                 break;
             case KEY_RIGHT:
-                if (you.x < 79) you.x += 1;
+                if (you.pos.x < 79) you.pos.x += 1;
                 break;
             case KEY_B2: case '5':
                 //fprintf(log, "b2\n");
