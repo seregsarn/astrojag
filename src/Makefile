@@ -2,8 +2,8 @@
 SYSTEM=unix
 WINDOW=ncurses
 # inputs
-HEADERS=thplib_preamble.h vector.h mapTemplate.h
-OBJLIST=mapTemplate.o vector.o jsonxx.o
+HEADERS=thplib_preamble.h vector.h mapTemplate.h resource.h logging.h
+OBJLIST=mapTemplate.o vector.o jsonxx.o resource.o logging.o
 # outputs
 OUTFILE=libthp_static.a
 OUTHEADER=thplib.h
