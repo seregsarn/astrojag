@@ -10,6 +10,7 @@ namespace json = jsonxx;
 #include <regex>
 #include <exception>
 #include <stdexcept>
+#include <vector>
 #include <list>
 using std::shared_ptr;
 using std::make_shared;

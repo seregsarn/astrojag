@@ -18,7 +18,6 @@ void debugDraw(Map* m) {
     //printw("%d %d c: %c", m->w, m->h, ch);
 }
 
-int debugOctant;
 
 class Shadow {
 public:
@@ -30,57 +29,52 @@ public:
 };
 class ShadowLine {
 public:
-    std::list<Shadow> line;
+    std::vector<Shadow> line;
     bool inShadow(const Shadow& projection) {
-        for (auto iter = line.begin(); iter != line.end(); iter++) {
-            if ((*iter).contains(projection)) return true;
+        unsigned int i;
+        for (i = 0; i < line.size(); i++) {
+            if (line[i].contains(projection)) return true;
         }
         return false;
     }
     bool isFullShadow() {
         if (line.size() != 1) return false;
-        auto s = line.front();
-        return (s.begin <= 0.001f && s.end >= 0.999f);
+        return (line[0].begin <= 0.001f && line[0].end >= 0.999f);
     }
     void add(Shadow& s) {
         bool overlapPrev = false, overlapNext = false;
         // find start position for the new shadow.
-        auto next = line.begin();
-        decltype(next) prev, spos;
-logger->print("\nadding shadow: [%f,%f]", s.begin, s.end); logger->flush();
-        for (; next != line.end(); next++) {
-            auto other = (*next);
-            if (other.begin >= s.begin) break;
+        unsigned int idx;
+//logger->print("\nadding shadow: [%f,%f]", s.begin, s.end); logger->flush();
+        for (idx = 0; idx < line.size(); idx++) {
+            if (line[idx].begin >= s.begin) break;
         }
-        spos = next; spos--;
         // find overlaps
-        if (spos != line.begin()) {
-            prev = spos; prev--;
-logger->print(" prev(%f > %f)", (*prev).end, s.begin); logger->flush();
-            if ((*prev).end > s.begin) overlapPrev = true;
+        if (idx > 0 && line[idx - 1].end > s.begin) {
+            overlapPrev = true;
         }
-        if (next != line.end()) {
-logger->print(" next(%f < %f)", (*next).begin, s.end); logger->flush();
-            if ((*next).begin < s.end) overlapNext = true;
+        if (idx < line.size() && line[idx].begin < s.end) {
+            overlapNext = true;
         }
-logger->print(" overlaps: %s", overlapPrev && overlapNext ? "both" : (overlapPrev ? "prev" : (overlapNext ? "next" : "none") ) ); logger->flush();
+//logger->print(" overlaps: %s", overlapPrev && overlapNext ? "both" : (overlapPrev ? "prev" : (overlapNext ? "next" : "none") ) ); logger->flush();
         // insert and merge with existing shadows.
         if (overlapNext) {
             if (overlapPrev) {
                 // overlaps both, so skip this shadow and merge the other two.
-logger->print("\n --> [%f,%f] eats [%f,%f] and [%f,%f]\n", (*prev).begin, (*prev).end, s.begin, s.end, (*next).begin, (*next).end);
-                (*prev).end = (*next).end;
-                line.erase(next);
+                
+//logger->print("\n --> [%f,%f] eats [%f,%f] and [%f,%f]\n", line[idx - 1].begin, line[idx - 1].end, s.begin, s.end, line[idx].begin, line[idx].end);
+                line[idx - 1].end = line[idx].end;
+                line.erase(line.begin() + idx);
             } else {
                 // merge with next shadow.
-                (*next).begin = s.begin;
+                line[idx].begin = s.begin;
             }
         } else { // no end overlap
             if (overlapPrev) {
                 // merge with prev shadow.
-                (*prev).end = s.end;
+                line[idx - 1].end = s.end;
             } else { // no overlap, just add it
-                line.insert(spos, s);
+                line.insert(line.begin() + idx, s);
             }
         }
     }
@@ -120,34 +114,28 @@ void shadowcast_octant(Map* m, Point pos, int octant) {
     ShadowLine line;
     bool fullShadow = false;
     // todo: octant casting
-    logger->print("=================\n(%d,%d), o%d\n", pos.x, pos.y, octant);
-    logger->flush();
+//logger->print("=================\n(%d,%d), o%d\n", pos.x, pos.y, octant); logger->flush();
     attron(COLOR_PAIR(6)|A_BOLD|A_REVERSE);
     for (row = 1;; row++) {
         // quit when we leave bounds
         vec = pos + transformOctant(Point(0, row), octant);
         if (!m->inBounds(vec.x, vec.y)) break;
-        logger->print("row %d (%d,%d), ", row, vec.x, vec.y);
-        line.describe();
-        logger->flush();
+//logger->print("row %d (%d,%d), ", row, vec.x, vec.y); line.describe(); logger->flush();
         
         for (col = 0; col <= row; col++) {
-            logger->print("   c%d r%d", col, row);
-            logger->flush();
+//logger->print("   c%d r%d", col, row); logger->flush();
             auto proj = projectTile(col, row);
-            logger->print(" [%f,%f]", proj.begin, proj.end);
-            logger->flush();
+//logger->print(" [%f,%f]", proj.begin, proj.end); logger->flush();
             vec = pos + transformOctant(Point(col, row), octant);
             x = vec.x; y = vec.y;
-            logger->print(" => (%d,%d)", x, y);
-            logger->flush();
+//logger->print(" => (%d,%d)", x, y); logger->flush();
             if (!m->inBounds(x,y)) break;
             if (!fullShadow) {
                 if (!line.inShadow(proj)) {
                     // visible
-                    logger->print(" >>> visible"); logger->flush();
+//logger->print(" >>> visible"); logger->flush();
                     if (m->at(x,y) == '#') {
-                        logger->print(", blocking"); logger->flush();
+//logger->print(", blocking"); logger->flush();
                         // add this shadow
                         line.add(proj);
                         fullShadow = line.isFullShadow();
@@ -157,9 +145,9 @@ void shadowcast_octant(Map* m, Point pos, int octant) {
                 }
             } else {
                 // blocked
-                logger->print(" >>> blocked"); logger->flush();
+//logger->print(" >>> blocked"); logger->flush();
             }
-            logger->print("\n"); logger->flush();
+//logger->print("\n"); logger->flush();
         }
     }
     attroff(COLOR_PAIR(6)|A_REVERSE|A_BOLD);
@@ -168,7 +156,18 @@ void shadowcast_octant(Map* m, Point pos, int octant) {
 
 void drawFov(Map* m, Point pos) {
     // todo: loop over debugOctant from 0 to 7.
-    shadowcast_octant(m, pos, debugOctant);
+    for (int oct = 0; oct < 8; oct++) {
+        shadowcast_octant(m, pos, oct);
+    }
+}
+
+bool debugPhase = false;
+bool move(Map *m, Point &p, Point dir) {
+    Point dest = p + dir;
+    if (!m->inBounds(dest.x, dest.y)) return false;
+    if (!debugPhase && m->at(dest.x, dest.y) == '#') return false;
+    // success
+    p = dest; return true;
 }
 
 int main(void) {
@@ -181,7 +180,6 @@ int main(void) {
         for (int x = 0; x < tpl->w; x++)
             map->at(x,y) = tpl->at(x,y);
     you.pos = Point(5,5);
-    debugOctant = 0;
     while (!quit) {
         clear();
         debugDraw(map.get());
@@ -195,38 +193,20 @@ int main(void) {
             case 'q':
                 quit = true;
                 break;
-            case KEY_A1: case KEY_HOME:
-                if (you.pos.y > 0) you.pos.y -= 1;
-                if (you.pos.x > 0) you.pos.x -= 1;                
-                break;
-            case KEY_A3: case KEY_PPAGE:
-                if (you.pos.y > 0) you.pos.y -= 1;
-                if (you.pos.x < 79) you.pos.x += 1;                
-                break;
-            case KEY_C1: case KEY_END:
-                if (you.pos.y > 20) you.pos.y += 1;
-                if (you.pos.x > 0) you.pos.x -= 1;                
-                break;
-            case KEY_C3: case KEY_NPAGE:
-                if (you.pos.y < 20) you.pos.y += 1;
-                if (you.pos.x < 79) you.pos.x += 1;                
-                break;
-            case KEY_UP:
-                if (you.pos.y > 0) you.pos.y -= 1;
-                break;
-            case KEY_DOWN:
-                if (you.pos.y < 20) you.pos.y += 1;
-                break;
-            case KEY_LEFT:
-                if (you.pos.x > 0) you.pos.x -= 1;
-                break;
-            case KEY_RIGHT:
-                if (you.pos.x < 79) you.pos.x += 1;
-                break;
+            case KEY_A1: case KEY_HOME:     move(map.get(), you.pos, Point(-1,-1)); break;
+            case KEY_A3: case KEY_PPAGE:    move(map.get(), you.pos, Point(+1,-1)); break;
+            case KEY_C1: case KEY_END:      move(map.get(), you.pos, Point(-1,+1)); break;
+            case KEY_C3: case KEY_NPAGE:    move(map.get(), you.pos, Point(+1,+1)); break;
+            case KEY_UP:                    move(map.get(), you.pos, Point( 0,-1)); break;
+            case KEY_DOWN:                  move(map.get(), you.pos, Point( 0,+1)); break;
+            case KEY_LEFT:                  move(map.get(), you.pos, Point(-1, 0)); break;
+            case KEY_RIGHT:                 move(map.get(), you.pos, Point(+1, 0)); break;
             case KEY_B2: case '5':
                 break;
-            case 'z': debugOctant = (--debugOctant < 0 ? 7 : debugOctant); break;
-            case 'x': debugOctant = (++debugOctant > 7 ? 0 : debugOctant); break;
+            case 'z':
+                debugPhase = !debugPhase;
+                printw("phase %s", debugPhase ? "on" : "off");
+                break;
             default:
                 move(0,0); printw("unknown character: %o    \n", c);
                 break;
