@@ -10,6 +10,7 @@ namespace json = jsonxx;
 #include <regex>
 #include <exception>
 #include <stdexcept>
+#include <list>
 using std::shared_ptr;
 using std::make_shared;
 
@@ -28,3 +29,19 @@ void plog(const char *fmt, ...);
 void shutdown_curses(void);
 void initialize_curses(void);
 
+#define log(fmt,...) logger.print(fmt,__VA_ARGS__)
+
+// map stuff
+class Map  {//    : IMap {
+protected:
+    char *tiles; // w*h
+public:
+    int w, h;
+
+    Map(int w, int h);
+    ~Map();
+    char& at(const int x, const int y);
+    char& at(const Point p);
+    bool inBounds(const int x, const int y);
+    bool inBounds(const Point& p);
+};

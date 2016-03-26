@@ -2,7 +2,7 @@ SYSTEM=unix
 WINDOW=ncurses
 
 HEADERS=main.h ../vendor/json/jsonxx.h
-OBJLIST=main.o curses.o jsonxx.o 
+OBJLIST=main.o curses.o map.o jsonxx.o
 LIB=libthp_static.a
 
 OBJDIR=obj

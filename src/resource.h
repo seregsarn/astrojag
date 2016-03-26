@@ -6,9 +6,9 @@
 class ResourceManager {
     struct zip *zf;
 public:
-    ResourceManager(string archiveFile);
+    ResourceManager(std::string archiveFile);
     ~ResourceManager();
-    string loadFile(string fname);
-    json::Value loadJson(string fname);
+    std::string loadFile(std::string fname);
+    json::Value loadJson(std::string fname);
 };
 
