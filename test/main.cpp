@@ -18,7 +18,7 @@ void debugDraw(Map* m) {
     //printw("%d %d c: %c", m->w, m->h, ch);
 }
 
-
+/*
 class Shadow {
 public:
     float begin, end;
@@ -160,6 +160,7 @@ void drawFov(Map* m, Point pos) {
         shadowcast_octant(m, pos, oct);
     }
 }
+*/
 
 bool debugPhase = false;
 bool move(Map *m, Point &p, Point dir) {

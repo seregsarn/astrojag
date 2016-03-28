@@ -9,12 +9,13 @@ namespace json = jsonxx;
 //---
 #include <memory>
 #include <string>
-using std::string;
 #include <regex>
 #include <exception>
 #include <stdexcept>
 using std::shared_ptr;
 using std::make_shared;
+
+using std::string;
 
 #include "thplib.h"
 
