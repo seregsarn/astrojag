@@ -83,42 +83,11 @@ void ShadowLine::describe() {
 }
 
 //=================================================================
+// FOV: the basic fov algorithm, calling back on demand.
 
-
-/*class FOVImmediate {
-protected:
-    IFieldOfView *map;
-    Point pos;
-    int flags;
-    void *userdata;
-public:
-    typedef std::function<void(Point)> callback;
-    FOVImmediate(IFieldOfView *m, Point p);
-    FOVImmediate(IFieldOfView *m, Point p, int flags);
-    FOVImmediate(IFieldOfView *m, Point p, int flags, void *userdata);
-    // walk the FOV.
-    void visit(callback cb) const;
-};
-
-// cached version of the FOV.
-class FOV : public FOVImmediate {
-protected:
-    // map of stuff
-    int w, h;
-    vector<bool> data;
-public:
-    FOV(IFieldOfView *m, Point p);
-    FOV(IFieldOfView *m, Point p, int flags);
-    FOV(IFieldOfView *m, Point p, int flags, void *userdata);
-    // read out data.
-    bool inFOV(Point p) const;
-    bool inFOV(int x, int y) const;
-};
-*/
-
-FOVImmediate::FOVImmediate(IFieldOfView *m, Point p) : FOVImmediate(m,p,0,nullptr) {}
-FOVImmediate::FOVImmediate(IFieldOfView *m, Point p, int flags) : FOVImmediate(m,p,flags, nullptr) {}
-FOVImmediate::FOVImmediate(IFieldOfView *m, Point p, int fl, void *ud) {
+FOV::FOV(IFieldOfView *m, Point p) : FOV(m,p,0,nullptr) {}
+FOV::FOV(IFieldOfView *m, Point p, int flags) : FOV(m,p,flags, nullptr) {}
+FOV::FOV(IFieldOfView *m, Point p, int fl, void *ud) {
     map = m;
     pos = p;
     flags = fl;
@@ -133,7 +102,7 @@ Shadow projectTile(int col, int row) {
     return Shadow(topLeft, bottomRight);
 }
 
-Point FOVImmediate::transformOctant(Point vec, int octant) {
+Point FOV::transformOctant(Point vec, int octant) {
     switch (octant) {
         case 0: return Point( vec.x,-vec.y);
         case 1: return Point( vec.y,-vec.x);
@@ -147,7 +116,7 @@ Point FOVImmediate::transformOctant(Point vec, int octant) {
     return Point(0,0);
 }
 
-void FOVImmediate::shadowcastOctant(int octant, callback visible) {
+void FOV::shadowcastOctant(int octant, callback visible) {
     int row, col, x, y;
     Point vec;
     ShadowLine line;
@@ -166,12 +135,12 @@ void FOVImmediate::shadowcastOctant(int octant, callback visible) {
             if (!fullShadow) {
                 if (!line.inShadow(proj)) {
                     // visible
-                    if (map->opaque(Point(x,y),flags,userdata)) {
+                    if (map->opaque(this, Point(x,y))) {
                         // add this shadow
                         line.add(proj);
                         fullShadow = line.isFullShadow();
                     }
-                    visible(Point(x,y), flags, userdata);
+                    visible(this, Point(x,y));
                 }
             } else {
                 // blocked
@@ -181,25 +150,30 @@ void FOVImmediate::shadowcastOctant(int octant, callback visible) {
     // todo: do some shadow volume stuff
 }
 
-void FOVImmediate::visit(FOVImmediate::callback cb) {
+void FOV::visit(FOV::callback cb) {
+    // start square always in FOV.
+    cb(this, pos);
     // loop over all the octants and shadowcast them.
     for (int oct = 0; oct < 8; oct++) {
         shadowcastOctant(oct, cb);
     }
 }
-void FOVImmediate::visit(FOVImmediate::callback cb, int fl) {
+void FOV::visit(FOV::callback cb, int fl) {
     flags = fl;
     visit(cb);
 }
-void FOVImmediate::visit(FOVImmediate::callback cb, int fl, void *ud) {
+void FOV::visit(FOV::callback cb, int fl, void *ud) {
     flags = fl;
     userdata = ud;
     visit(cb);
 }
 
-FOV::FOV(IFieldOfView *m, Point p) : FOV(m,p,0,nullptr) {}
-FOV::FOV(IFieldOfView *m, Point p, int flags) : FOV(m,p,flags, nullptr) {}
-FOV::FOV(IFieldOfView *m, Point p, int fl, void *ud) : FOVImmediate(m, p, fl, ud) {
+//=================================================================
+// cached FOV map. immediately runs the FOV and builds a boolean map.
+
+FOVMap::FOVMap(IFieldOfView *m, Point p) : FOVMap(m,p,0,nullptr) {}
+FOVMap::FOVMap(IFieldOfView *m, Point p, int flags) : FOVMap(m,p,flags, nullptr) {}
+FOVMap::FOVMap(IFieldOfView *m, Point p, int fl, void *ud) : FOV(m, p, fl, ud) {
     map = m;
     pos = p;
     flags = fl;
@@ -211,25 +185,21 @@ FOV::FOV(IFieldOfView *m, Point p, int fl, void *ud) : FOVImmediate(m, p, fl, ud
     for (int i = 0; i < w*h; i++) {
         data[i] = false;
     }
-    // ignore flags and udata, just set the visibility.
-    callback cb = [data](Point p, int flags, void *udata) {
-        data[(p.y*w)+p.x] = true;
-        (void)flags;
-        (void)udata;
+    // ignore context, just set the visibility.
+    callback cb = [this](FOV *context, Point p) {
+        this->data[(p.y*w)+p.x] = true;
+        (void)context;
     };
-    visit(cb, fl, ud);
+    visit(cb);
 }
 
-FOV::~FOV() {
+FOVMap::~FOVMap() {
     free(data);
 }
 
-bool FOV::inFOV(Point p) const { return inFOV(p.x, p.y); }
-bool FOV::inFOV(int x, int y) const {
+bool FOVMap::inFOV(Point p) const { return inFOV(p.x, p.y); }
+bool FOVMap::inFOV(int x, int y) const {
     if (x < 0 || y < 0 || x >= w || y >= h) return false;
     return data[(y*w) + x];
 }
-
-//================================================================================
-
 

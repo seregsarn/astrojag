@@ -33,7 +33,7 @@ void initialize_curses(void);
 #define log(fmt,...) logger.print(fmt,__VA_ARGS__)
 
 // map stuff
-class Map  {//    : IMap {
+class Map : public IFieldOfView {
 protected:
     char *tiles; // w*h
 public:
@@ -41,8 +41,12 @@ public:
 
     Map(int w, int h);
     ~Map();
+    Point getDimensions() { return Point(w,h); } // IFieldOfView
     char& at(const int x, const int y);
     char& at(const Point p);
     bool inBounds(const int x, const int y);
     bool inBounds(const Point& p);
+    
+    // IFieldOfView
+    bool opaque(FOV *context, Point p);
 };

@@ -20,3 +20,9 @@ bool Map::inBounds(const int x, const int y) {
     if (x < 0 || y < 0 || x >= w || y >= h) return false;
     return true;
 }
+
+bool Map::opaque(FOV *context, Point p) {
+    if (at(p.x,p.y) == '#') return true;
+    return false;
+    (void)context;
+}
