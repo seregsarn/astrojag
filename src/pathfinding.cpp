@@ -55,7 +55,7 @@ int DijkstraMap::scanStep() {
             // NB: weird construction for this conditional, but most values
             // will start out as INT_MAX and we don't want to do weird shit
             // due to integer overflow.
-            if (val > ln && (val - ln) > 2) {
+            if (val > ln && (val - ln) >= 2) {
                 data[(y*w)+x] = ln+1;
                 changes++;
             }
@@ -72,14 +72,17 @@ void DijkstraMap::fullScan() {
     } while (ch > 0);
 }
 
-void DijkstraMap::invert() {
+void DijkstraMap::invert(float coefficient) {
+    float flee_co = fabs(coefficient);
+    int factor = (int)(flee_co * 1000);
     // todo: multiply values by a negative coefficient around -1.2
     //  + use fixed point?
     //  + variable for coefficient?
     // then call fullScan() again to recompute the map.
     for (int i = 0; i < w*h; i++) {
         if (data[i] != INT_MAX)
-            data[i] = (int)(data[i] * -1.5);
+            //data[i] = ((int)floor(data[i] * -factor)) / 1000;
+            data[i] = (int)(data[i] * -fabs(coefficient));
     }
     fullScan();
 }

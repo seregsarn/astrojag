@@ -38,12 +38,13 @@ void drawDM(DijkstraMap *dm) {
     for (int y = 0; y < dim.y; y++) {
         move(y,0);
         for (int x = 0; x < dim.x; x++) {
-            v = abs(dm->at(x,y));
+            v = dm->at(x,y);
+            if (v < 0) attron(A_REVERSE); else attroff(A_REVERSE);
+            v = abs(v);
             if (v == INT_MAX) move(y,x+1);
                 else addch(values[v % 16]);
         }
     }
-    
 }
 
 bool debugPhase = false;
@@ -120,7 +121,7 @@ int main(void) {
         flee.clear();
         flee.goal(you.pos);
         flee.fullScan();
-        flee.invert();
+        flee.invert(1.5);
     }
     shutdown_curses();
     return 0;

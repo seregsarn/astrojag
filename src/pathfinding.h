@@ -27,7 +27,7 @@ public:
     // map-wide operations
     void clear(int value=INT_MAX);      // max out all the values in the map.
     void fullScan();                    // perform the smoothing operation on the entire map.
-    void invert();                      // perform the inversion to get an "avoidance map", e.g. for fleeing.
+    void invert(float coefficient=1.5); // perform the inversion to get an "avoidance map", e.g. for fleeing.
     // accessors
     int& at(const int x, const int y);
     int& at(const Point p);
