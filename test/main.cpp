@@ -26,8 +26,24 @@ void drawFov(Map* m, Point pos) {
         if (pos.manhattan(p) > 10) return;
         move(p.y, p.x);
         addch(m->at(p.x,p.y));
+        (void)context;
     });
     attroff(COLOR_PAIR(6)|A_BOLD);
+}
+
+void drawDM(DijkstraMap *dm) {
+    const char *values = "0123456789ABCDEF ";
+    int v;
+    Point dim = dm->getDimensions();
+    for (int y = 0; y < dim.y; y++) {
+        move(y,0);
+        for (int x = 0; x < dim.x; x++) {
+            v = abs(dm->at(x,y));
+            if (v == INT_MAX) move(y,x+1);
+                else addch(values[v % 16]);
+        }
+    }
+    
 }
 
 bool debugPhase = false;
@@ -39,6 +55,9 @@ bool move(Map *m, Point &p, Point dir) {
     p = dest; return true;
 }
 
+bool debugDM = false;
+bool debugFlee = false;
+
 int main(void) {
     wchar_t c;
     logger = make_shared<ThpLogger>("debug.log");
@@ -49,15 +68,19 @@ int main(void) {
         for (int x = 0; x < tpl->w; x++)
             map->at(x,y) = tpl->at(x,y);
     you.pos = Point(5,5);
+    DijkstraMap dmap(map.get());
+    DijkstraMap flee(map.get());
     while (!quit) {
-        clear();
         debugDraw(map.get());
         drawFov(map.get(), you.pos);
+        if (debugDM) drawDM(&dmap);
+        if (debugFlee) drawDM(&flee);
         move(you.pos.y,you.pos.x);
         addch('@');
         move(you.pos.y,you.pos.x);
         refresh();
         c = getch();
+        clear();
         switch(c) {
             case 'q':
                 quit = true;
@@ -74,12 +97,30 @@ int main(void) {
                 break;
             case 'z':
                 debugPhase = !debugPhase;
+                move(map->h+2, 0);
                 printw("phase %s", debugPhase ? "on" : "off");
+                break;
+            case 'x':
+                debugDM = !debugDM;
+                move(map->h+2, 0);
+                printw("dmap %s", debugDM ? "on" : "off");
+                break;
+            case 'c':
+                debugFlee = !debugFlee;
+                move(map->h+2, 0);
+                printw("fleemap %s", debugFlee ? "on" : "off");
                 break;
             default:
                 move(0,0); printw("unknown character: %o    \n", c);
                 break;
         }
+        dmap.clear();
+        dmap.goal(you.pos);
+        dmap.fullScan();
+        flee.clear();
+        flee.goal(you.pos);
+        flee.fullScan();
+        flee.invert();
     }
     shutdown_curses();
     return 0;

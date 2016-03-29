@@ -26,3 +26,9 @@ bool Map::opaque(FOV *context, Point p) {
     return false;
     (void)context;
 }
+
+bool Map::blocked(Point p, int flags) {
+    if (at(p.x,p.y) == '#') return true;
+    return false;
+    (void)flags;
+}

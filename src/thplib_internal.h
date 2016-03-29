@@ -12,10 +12,12 @@ namespace json = jsonxx;
 #include <regex>
 #include <exception>
 #include <stdexcept>
+#include <algorithm>
 using std::shared_ptr;
 using std::make_shared;
 
 using std::string;
+using std::min;
 
 #include "thplib.h"
 
