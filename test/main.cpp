@@ -47,6 +47,17 @@ void drawDM(DijkstraMap *dm) {
     }
 }
 
+void drawPath(shared_ptr<Map> m, Point from, Point to) {
+    // stuh![B
+    Pathfinder pf(m.get());
+    auto path = pf.findPath(from, to);
+    path->walk([](Point p)->bool {
+        move(p.y, p.x);
+        chgat(1, 0, 6, NULL);
+        return true;
+    });
+}
+
 bool debugPhase = false;
 bool move(Map *m, Point &p, Point dir) {
     Point dest = p + dir;
@@ -58,6 +69,7 @@ bool move(Map *m, Point &p, Point dir) {
 
 bool debugDM = false;
 bool debugFlee = false;
+bool debugPath = false;
 
 int main(void) {
     wchar_t c;
@@ -76,9 +88,11 @@ int main(void) {
         drawFov(map.get(), you.pos);
         if (debugDM) drawDM(&dmap);
         if (debugFlee) drawDM(&flee);
+        if (debugPath) drawPath(map, you.pos, you.cursor);
         move(you.pos.y,you.pos.x);
         addch('@');
-        move(you.pos.y,you.pos.x);
+        if (debugPath) move(you.cursor.y, you.cursor.x);
+        else move(you.pos.y,you.pos.x);
         refresh();
         c = getch();
         clear();
@@ -86,14 +100,14 @@ int main(void) {
             case 'q':
                 quit = true;
                 break;
-            case KEY_A1: case KEY_HOME:     move(map.get(), you.pos, Point(-1,-1)); break;
-            case KEY_A3: case KEY_PPAGE:    move(map.get(), you.pos, Point(+1,-1)); break;
-            case KEY_C1: case KEY_END:      move(map.get(), you.pos, Point(-1,+1)); break;
-            case KEY_C3: case KEY_NPAGE:    move(map.get(), you.pos, Point(+1,+1)); break;
-            case KEY_UP:                    move(map.get(), you.pos, Point( 0,-1)); break;
-            case KEY_DOWN:                  move(map.get(), you.pos, Point( 0,+1)); break;
-            case KEY_LEFT:                  move(map.get(), you.pos, Point(-1, 0)); break;
-            case KEY_RIGHT:                 move(map.get(), you.pos, Point(+1, 0)); break;
+            case KEY_A1: case KEY_HOME:     move(map.get(), debugPath ? you.cursor : you.pos, Point(-1,-1)); break;
+            case KEY_A3: case KEY_PPAGE:    move(map.get(), debugPath ? you.cursor : you.pos, Point(+1,-1)); break;
+            case KEY_C1: case KEY_END:      move(map.get(), debugPath ? you.cursor : you.pos, Point(-1,+1)); break;
+            case KEY_C3: case KEY_NPAGE:    move(map.get(), debugPath ? you.cursor : you.pos, Point(+1,+1)); break;
+            case KEY_UP:                    move(map.get(), debugPath ? you.cursor : you.pos, Point( 0,-1)); break;
+            case KEY_DOWN:                  move(map.get(), debugPath ? you.cursor : you.pos, Point( 0,+1)); break;
+            case KEY_LEFT:                  move(map.get(), debugPath ? you.cursor : you.pos, Point(-1, 0)); break;
+            case KEY_RIGHT:                 move(map.get(), debugPath ? you.cursor : you.pos, Point(+1, 0)); break;
             case KEY_B2: case '5':
                 break;
             case 'z':
@@ -110,6 +124,12 @@ int main(void) {
                 debugFlee = !debugFlee;
                 move(map->h+2, 0);
                 printw("fleemap %s", debugFlee ? "on" : "off");
+                break;
+            case 'v':
+                debugPath = !debugPath;
+                move(map->h+2, 0);
+                printw("pathing %s", debugFlee ? "on" : "off");
+                you.cursor = you.pos;
                 break;
             default:
                 move(0,0); printw("unknown character: %o    \n", c);

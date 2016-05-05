@@ -1,6 +1,6 @@
 // archive-based resource loader
 
-#include "thplib_internal.h"
+#include "astrojag_internal.h"
 
 ResourceManager::ResourceManager(string archiveFile) {
     int err;

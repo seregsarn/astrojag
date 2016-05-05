@@ -2,11 +2,11 @@
 SYSTEM=unix
 WINDOW=ncurses
 # inputs
-HEADERS=thplib_preamble.h vector.h mapTemplate.h resource.h logging.h fov.h pathfinding.h
+HEADERS=astrojag_preamble.h vector.h mapTemplate.h resource.h logging.h fov.h pathfinding.h
 OBJLIST=mapTemplate.o vector.o jsonxx.o resource.o logging.o fov.o pathfinding.o
 # outputs
-OUTFILE=libthp_static.a
-OUTHEADER=thplib.h
+OUTFILE=libastrojag_static.a
+OUTHEADER=astrojag.h
 
 # sausage
 OBJDIR=objs

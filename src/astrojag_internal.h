@@ -19,7 +19,7 @@ using std::make_shared;
 using std::string;
 using std::min;
 
-#include "thplib.h"
+#include "astrojag.h"
 
 extern ThpLogger *internalLogger;
 void internalLog(const char *fmt, ...);

@@ -1,4 +1,4 @@
-#include "thplib_internal.h"
+#include "astrojag_internal.h"
 
 const Vector Vector::origin(0.0f,0.0f);
 

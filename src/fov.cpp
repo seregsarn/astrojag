@@ -1,4 +1,4 @@
-#include "thplib_internal.h"
+#include "astrojag_internal.h"
 
 // required for interface, because C++ is weird.
 IFieldOfView::~IFieldOfView() {}

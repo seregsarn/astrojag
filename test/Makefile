@@ -1,9 +1,9 @@
 SYSTEM=unix
 WINDOW=ncurses
 
-HEADERS=main.h ../vendor/json/jsonxx.h
+HEADERS=main.h ../vendor/json/jsonxx.h ../lib/astrojag.h
 OBJLIST=main.o curses.o map.o jsonxx.o
-LIB=libthp_static.a
+LIB=libastrojag_static.a
 
 OBJDIR=obj
 LIBPATH=../lib/$(LIB)

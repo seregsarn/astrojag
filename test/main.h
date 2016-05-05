@@ -15,11 +15,12 @@ namespace json = jsonxx;
 using std::shared_ptr;
 using std::make_shared;
 
-#include "thplib.h"
+#include "astrojag.h"
 
 // main.cpp
 struct player_s {
     Point pos;
+    Point cursor;
 };
 extern struct player_s you;
 extern bool quit;

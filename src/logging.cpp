@@ -1,4 +1,4 @@
-#include "thplib_internal.h"
+#include "astrojag_internal.h"
 
 ThpLogger *ThpLogger::internalLogger = nullptr;
 
@@ -10,7 +10,7 @@ void internalLog(const char *fmt, ...) {
 	va_start(s, fmt);
 	vsnprintf(buf, 4096, fmt, s);
 	va_end(s);
-	ThpLogger::internalLogger->print("thplib: %s", buf);
+	ThpLogger::internalLogger->print("astrojag: %s", buf);
 }
 
 void ThpLogger::setInternalLogger(ThpLogger *l) {

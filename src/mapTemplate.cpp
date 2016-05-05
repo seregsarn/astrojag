@@ -1,4 +1,4 @@
-#include "thplib_internal.h"
+#include "astrojag_internal.h"
 
 MapTemplate::MapTemplate(int _w, int _h) {
     w = _w; h = _h;
