@@ -2,8 +2,8 @@
 SYSTEM=unix
 WINDOW=ncurses
 # inputs
-HEADERS=astrojag_preamble.h vector.h mapTemplate.h resource.h logging.h fov.h pathfinding.h
-OBJLIST=mapTemplate.o vector.o jsonxx.o resource.o logging.o fov.o pathfinding.o
+HEADERS=astrojag_preamble.h vector.h topology.h utility.h mapTemplate.h resource.h logging.h fov.h pathfinding.h
+OBJLIST=vector.o topology.o utility.o mapTemplate.o jsonxx.o resource.o logging.o fov.o pathfinding.o
 # outputs
 OUTFILE=libastrojag_static.a
 OUTHEADER=astrojag.h

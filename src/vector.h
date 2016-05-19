@@ -70,3 +70,6 @@ Point operator*(const Point& a, int32_t b);
 Point operator/(const Point& a, int32_t b);
 
 std::ostream& operator<<(std::ostream& os, const Point& b);
+
+template <>
+bool std::less<Point>::operator()(const Point& lhs, const Point& rhs) const;

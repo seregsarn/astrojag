@@ -126,3 +126,8 @@ std::ostream& operator<<(std::ostream& os, const Point& b)
 {
    return os << '(' << b.x << ',' << b.y << ')';
 }
+
+template <>
+bool std::less<Point>::operator()(const Point& lhs, const Point& rhs) const {
+    return (lhs.x < rhs.x ? true : (lhs.y < rhs.y ? true : false));
+}

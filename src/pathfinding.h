@@ -11,7 +11,6 @@ public:
     virtual bool blocked(Point p, int flags)=0;   // whether or not a tile is passable.
 };
 
-// TODO: add flags/etc.
 class DijkstraMap {
 protected:
     IPathable *host;
@@ -54,7 +53,11 @@ public:
 class Pathfinder {
 protected:
     IPathable *map;
-    //std::function<bool(const Point&)> customCallback;
+    PriorityQueue<Point> open;
+    std::set<Point> closed;
+    Grid<Point> cameFrom;
+    Grid<int> bestCost;
+    //std::function<int(IPathable *map, const Point&)> heuristic;
 public:
     Pathfinder(IPathable *map);
     //Pathfinder(IPathable *map, IPathable::callback cb);

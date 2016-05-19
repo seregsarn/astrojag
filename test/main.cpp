@@ -53,6 +53,7 @@ void drawPath(shared_ptr<Map> m, Point from, Point to) {
     auto path = pf.findPath(from, to);
     path->walk([](Point p)->bool {
         move(p.y, p.x);
+        addch('*');
         chgat(1, 0, 6, NULL);
         return true;
     });

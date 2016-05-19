@@ -151,7 +151,7 @@ void Path::walk(std::function<bool(Point)> callback) {
     }
 }
 
-Pathfinder::Pathfinder(IPathable *_map) {
+Pathfinder::Pathfinder(IPathable *_map) : cameFrom(_map->getDimensions().x, _map->getDimensions().y), bestCost(_map->getDimensions().x, _map->getDimensions().y) {
     map = _map;
 }
 Pathfinder::~Pathfinder() { }
@@ -166,8 +166,56 @@ shared_ptr<Path> Pathfinder::findPath(Point src, Point dst, int flags) {
     return findPath(src.x, src.y, dst.x, dst.y, flags);
 }
 
-shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2, int flags) {
-    auto npath = make_shared<Path>();
-    return npath;
+std::vector<Point> findNeighbors(Point p) {
+    //Point d = getDimensions();
+    std::vector<Point> v(8);
+    v[0] = p + Point(-1,-1);
+    v[1] = p + Point( 0,-1);
+    v[2] = p + Point( 1,-1);
+    v[3] = p + Point(-1, 0);
+    v[4] = p + Point( 1, 0);
+    v[5] = p + Point(-1, 1);
+    v[6] = p + Point( 0, 1);
+    v[7] = p + Point( 1, 1);
+    return v;
 }
 
+shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2, int flags) {
+    int i = 0, score = 0;
+    Point dims = map->getDimensions();
+    auto start = Point(x1,y1);
+    auto goal = Point(x2,y2);
+    auto npath = make_shared<Path>();
+    open.clear();
+    closed.clear();
+    cameFrom.clearTo(Point(-1,-1));
+    bestCost.clearTo(INT_MAX);
+    bestCost.at(start) = 0;
+    open.insert(0, start);
+    while (open.size() > 0) {
+        auto curr = open.pop();
+        if (curr == goal) {
+            // reconstruct path
+            //internalLog("testing: found path\n");
+            while (curr != start) {
+                npath->nodes.push_front(curr);
+                curr = cameFrom.at(curr);
+            }
+            return npath;
+        }
+        closed.insert(curr);
+        // look at neighbors
+        for (int i=0; i < 8; i++) {
+            Point n = curr + neighbors[i];
+            if (n.x < 0 || n.y < 0 || n.x >= dims.x || n.y >= dims.y) continue; // out of bounds
+            if (map->blocked(n, flags)) continue; // blocked.
+            if (closed.find(n) != closed.end()) continue; // already closed.
+            score = bestCost.at(curr) + n.manhattan(goal);
+            if (cameFrom.at(n) != Point(-1,-1) && bestCost.at(n) <= score) continue; // not a better path
+            bestCost.at(n) = bestCost.at(curr) + 1;
+            cameFrom.at(n) = curr;
+            open.insert(score, n);
+        }
+    }
+    return npath;
+}
