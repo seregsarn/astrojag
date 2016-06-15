@@ -1,4 +1,4 @@
-// map interface for thplib algorithms.
+// fov algorithms.
 //===================================================
 
 class FOV;

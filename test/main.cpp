@@ -48,13 +48,22 @@ void drawDM(DijkstraMap *dm) {
 }
 
 void drawPath(shared_ptr<Map> m, Point from, Point to) {
-    // stuh![B
+    // stuh!
     Pathfinder pf(m.get());
     auto path = pf.findPath(from, to);
     path->walk([](Point p)->bool {
         move(p.y, p.x);
         addch('*');
-        chgat(1, 0, 6, NULL);
+        chgat(0, 0, 6, NULL);
+        return true;
+    });
+}
+void drawLine(Point from, Point to) {
+    // stuh!
+    Line(from, to, [](Point& p)->bool {
+        move(p.y, p.x);
+        addch('*');
+        chgat(0, 0, 6, NULL);
         return true;
     });
 }
@@ -71,10 +80,25 @@ bool move(Map *m, Point &p, Point dir) {
 bool debugDM = false;
 bool debugFlee = false;
 bool debugPath = false;
+bool debugLine = false;
+RNG rng;
 
 int main(void) {
     wchar_t c;
     logger = make_shared<ThpLogger>("debug.log");
+    /*
+    rng = RNG::deserialize("[\
+        1705,\
+        10092,\
+        47666,\
+        3041,\
+        44468,\
+        39821,\
+        15483,\
+        19805\
+]");
+    //*/
+    //log("rng: %s\n", rng.serialize().c_str());
     initialize_curses();
     shared_ptr<MapTemplate> tpl = make_shared<MapTemplate>("fov.level");
     shared_ptr<Map> map = make_shared<Map>(tpl->w, tpl->h);
@@ -89,9 +113,15 @@ int main(void) {
         drawFov(map.get(), you.pos);
         if (debugDM) drawDM(&dmap);
         if (debugFlee) drawDM(&flee);
-        if (debugPath) drawPath(map, you.pos, you.cursor);
+        if (debugPath) {
+            if (debugLine) {
+                drawLine(you.pos, you.cursor);
+            } else {
+                drawPath(map, you.pos, you.cursor);
+            }
+        }
         move(you.pos.y,you.pos.x);
-        addch('@');
+        if (!debugLine) addch('@');
         if (debugPath) move(you.cursor.y, you.cursor.x);
         else move(you.pos.y,you.pos.x);
         refresh();
@@ -128,10 +158,38 @@ int main(void) {
                 break;
             case 'v':
                 debugPath = !debugPath;
+                debugLine = false;
                 move(map->h+2, 0);
-                printw("pathing %s", debugFlee ? "on" : "off");
+                printw("pathing %s", debugPath ? "on" : "off");
                 you.cursor = you.pos;
                 break;
+            case 'b':
+                if (debugPath) {
+                    if (debugLine) {
+                        debugLine = false; debugPath = false;
+                    } else debugLine = true;
+                } else {
+                    debugPath = debugLine = true;
+                }
+                move(map->h+2, 0);
+                printw("line %s", debugLine ? "on" : "off");
+                you.cursor = you.pos;
+                break;
+            case 'w':
+                move(map->h+2, 0);
+                printw("random int: %u\njson: %s", rng.range(20,30), rng.serialize().c_str());
+                break;
+            case 'e': {
+                move(map->h+2, 0);
+                printw("current: %u, %u", rng.seeds[0], rng.seeds[1]);
+                std::string ser = rng.serialize();
+                move(map->h+4, 0);
+                printw("current state: %s", ser.c_str());
+                RNG temp = RNG::deserialize(ser);
+                move(map->h+3, 0);
+                printw("read back in: %u, %u", temp.seeds[0], temp.seeds[1]);
+                break;
+            }
             default:
                 move(0,0); printw("unknown character: %o    \n", c);
                 break;

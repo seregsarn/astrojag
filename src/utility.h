@@ -1,6 +1,11 @@
 // utility classes for astrojag.
 //===================================================
 
+// bresenham
+void Line(Point from, Point to, std::function<bool(Point&)> cb);
+void Line(int x1, int y1, int x2, int y2, std::function<bool(Point&)> cb);
+
+// priority queue implementation for pathfinding et al.
 template <typename T>
 class PriorityQueue {
 protected:

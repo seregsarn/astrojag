@@ -1,4 +1,4 @@
-// topology stuff for thplib.
+// topology stuff for libastrojag
 //===================================================
 
 template<typename T>

@@ -1,4 +1,4 @@
-// pathfinding algorithm(s) for thplib.
+// pathfinding algorithm(s) for libastrojag.
 //===================================================
 
 class IPathable {

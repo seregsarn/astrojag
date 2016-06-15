@@ -2,8 +2,8 @@
 SYSTEM=unix
 WINDOW=ncurses
 # inputs
-HEADERS=astrojag_preamble.h vector.h topology.h utility.h mapTemplate.h resource.h logging.h fov.h pathfinding.h
-OBJLIST=vector.o topology.o utility.o mapTemplate.o jsonxx.o resource.o logging.o fov.o pathfinding.o
+HEADERS=astrojag_preamble.h vector.h topology.h utility.h mapTemplate.h resource.h logging.h fov.h pathfinding.h rng.h
+OBJLIST=vector.o topology.o utility.o mapTemplate.o jsonxx.o resource.o logging.o fov.o pathfinding.o rng.o
 # outputs
 OUTFILE=libastrojag_static.a
 OUTHEADER=astrojag.h
@@ -37,22 +37,22 @@ $(OBJDIR)/jsonxx.o: ../vendor/json/jsonxx.cc $(HEADERS) | $(OBJDIR)
 
 
 $(LIBHEADER): $(LIBDIR) $(HEADERS)
-	@echo "Building thplib.h..."
+	@echo "Building astrojag.h..."
 ifdef DIST
 	rm -f $(LIBHEADER)
 	touch $(LIBHEADER)
 else
-	@echo "/* This file is generated automatically by \"make thplib.h\". Do not edit. */\n\n" > $(LIBHEADER)
+	@echo "/* This file is generated automatically by \"make astrojag.h\". Do not edit. */\n\n" > $(LIBHEADER)
 endif
 	@cat $(HEADERS) >> $(LIBHEADER)
 
-thplib: $(LIBDIR) $(LIBHEADER) $(OBJS)
+astrojag: $(LIBDIR) $(LIBHEADER) $(OBJS)
 	@echo "Rebuilding Library...";
 	$(LD) $(LDFLAGS) $(OUTPUT) $(OBJS)
 
-all: thplib
+all: astrojag
 
-dist: thplib DIST=true
+dist: astrojag DIST=true
 
 clean:
 	rm -f $(OBJDIR)/*.o

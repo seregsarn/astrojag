@@ -13,6 +13,7 @@ namespace json = jsonxx;
 #include <exception>
 #include <stdexcept>
 #include <algorithm>
+#include <cstdint>
 using std::shared_ptr;
 using std::make_shared;
 

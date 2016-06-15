@@ -31,7 +31,7 @@ void plog(const char *fmt, ...);
 void shutdown_curses(void);
 void initialize_curses(void);
 
-#define log(fmt,...) logger.print(fmt,__VA_ARGS__)
+#define log(fmt,...) logger->print(fmt,__VA_ARGS__)
 
 // map stuff
 class Map : public IFieldOfView, public IPathable {
