@@ -166,14 +166,16 @@ int main(void) {
             case 'b':
                 if (debugPath) {
                     if (debugLine) {
-                        debugLine = false; debugPath = false;
-                    } else debugLine = true;
+                        debugLine = false;
+                    } else {
+                        debugLine = true;
+                    }
                 } else {
                     debugPath = debugLine = true;
+                    you.cursor = you.pos;
                 }
                 move(map->h+2, 0);
                 printw("line %s", debugLine ? "on" : "off");
-                you.cursor = you.pos;
                 break;
             case 'w':
                 move(map->h+2, 0);

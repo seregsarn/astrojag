@@ -45,6 +45,8 @@ ifdef DIST
 else
 	@echo "/* This file is generated automatically by \"make astrojag.h\". Do not edit. */\n" > $(LIBHEADER)
 endif
+	@mkdir -p $(LIBDIR)/json
+	@cp ../vendor/json/jsonxx.h $(LIBDIR)/json
 	@cat $(HEADERS) >> $(LIBHEADER)
 
 astrojag: $(LIBDIR) $(LIBHEADER) $(OBJS)
@@ -59,5 +61,7 @@ clean:
 	rm -f $(OBJDIR)/*.o
 	rm -f $(OUTPUT)
 	rm -f $(LIBHEADER)
-	-@rmdir $(LIBDIR) 2> /dev/null || true	
+	rm -f $(LIBDIR)/json/jsonxx.h
+	-@rmdir $(LIBDIR)/json 2> /dev/null || true
+	-@rmdir $(LIBDIR) 2> /dev/null || true
 	-@rmdir $(OBJDIR) 2> /dev/null || true

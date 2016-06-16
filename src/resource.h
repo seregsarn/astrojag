@@ -12,6 +12,6 @@ public:
     ResourceManager(std::string archiveFile);
     ~ResourceManager();
     std::string loadFile(std::string fname);
-    json::Value loadJson(std::string fname);
+    jsonxx::Value loadJson(std::string fname);
 };
 

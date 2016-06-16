@@ -156,13 +156,13 @@ Pathfinder::Pathfinder(IPathable *_map) : cameFrom(_map->getDimensions().x, _map
 }
 Pathfinder::~Pathfinder() { }
 
-shared_ptr<Path> Pathfinder::findPath(Point src, Point dst) {
+std::shared_ptr<Path> Pathfinder::findPath(Point src, Point dst) {
     return findPath(src.x, src.y, dst.x, dst.y,0);
 }
-shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2) {
+std::shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2) {
     return findPath(x1,y1,x2,y2,0);
 }
-shared_ptr<Path> Pathfinder::findPath(Point src, Point dst, int flags) {
+std::shared_ptr<Path> Pathfinder::findPath(Point src, Point dst, int flags) {
     return findPath(src.x, src.y, dst.x, dst.y, flags);
 }
 
@@ -180,7 +180,7 @@ std::vector<Point> findNeighbors(Point p) {
     return v;
 }
 
-shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2, int flags) {
+std::shared_ptr<Path> Pathfinder::findPath(int x1, int y1, int x2, int y2, int flags) {
     int i = 0, score = 0;
     Point dims = map->getDimensions();
     auto start = Point(x1,y1);

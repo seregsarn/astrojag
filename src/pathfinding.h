@@ -63,9 +63,9 @@ public:
     Pathfinder(IPathable *map);
     ~Pathfinder();
     
-    shared_ptr<Path> findPath(Point src, Point dst);
-    shared_ptr<Path> findPath(int x1, int y1, int x2, int y2);
-    shared_ptr<Path> findPath(Point src, Point dst, int flags);
-    shared_ptr<Path> findPath(int x1, int y1, int x2, int y2, int flags);
+    std::shared_ptr<Path> findPath(Point src, Point dst);
+    std::shared_ptr<Path> findPath(int x1, int y1, int x2, int y2);
+    std::shared_ptr<Path> findPath(Point src, Point dst, int flags);
+    std::shared_ptr<Path> findPath(int x1, int y1, int x2, int y2, int flags);
 };
 

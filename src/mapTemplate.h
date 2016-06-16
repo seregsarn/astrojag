@@ -7,7 +7,7 @@
 class MapTemplate {
 public:
     char *data; //array [w*h]
-    json::Object metadata;
+    jsonxx::Object metadata;
     int w, h;
 
     // memory management
