@@ -2,13 +2,14 @@
 SYSTEM=unix
 WINDOW=ncurses
 # inputs
-HEADERS=astrojag_preamble.h vector.h topology.h utility.h mapTemplate.h resource.h logging.h fov.h pathfinding.h rng.h
+HEADERLIST=vector.h topology.h utility.h mapTemplate.h resource.h logging.h fov.h pathfinding.h rng.h
 OBJLIST=vector.o topology.o utility.o mapTemplate.o jsonxx.o resource.o logging.o fov.o pathfinding.o rng.o
 # outputs
 OUTFILE=libastrojag_static.a
 OUTHEADER=astrojag.h
 
 # sausage
+HEADERS=astrojag_preamble.h $(HEADERLIST) astrojag_postscript.h
 OBJDIR=objs
 LIBDIR=../lib
 LIBHEADER=$(LIBDIR)/$(OUTHEADER)
@@ -42,7 +43,7 @@ ifdef DIST
 	rm -f $(LIBHEADER)
 	touch $(LIBHEADER)
 else
-	@echo "/* This file is generated automatically by \"make astrojag.h\". Do not edit. */\n\n" > $(LIBHEADER)
+	@echo "/* This file is generated automatically by \"make astrojag.h\". Do not edit. */\n" > $(LIBHEADER)
 endif
 	@cat $(HEADERS) >> $(LIBHEADER)
 

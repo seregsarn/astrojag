@@ -1,5 +1,7 @@
 #include "astrojag_internal.h"
 
+namespace astrojag {
+
 void Line(int x1, int y1, int x2, int y2, std::function<bool(Point&)> cb) {
     Point from(x1,y1), to(x2, y2);
     Line(from,to,cb);
@@ -64,3 +66,5 @@ void Line(Point from, Point to, std::function<bool(Point&)> cb) {
         }
     }
 }
+
+}; // namespace astrojag

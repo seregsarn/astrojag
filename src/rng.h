@@ -1,5 +1,8 @@
 // seedable, freezable PRNG.
 //===================================================
+// this is wrapped up in an object for cleanliness and so that you can have
+// multiple RNGs, say one for generating the overworld and another for
+// generating dungeon levels, etc.
 
 class RNG {
 protected:
@@ -26,3 +29,4 @@ public:
     std::string serialize();
     static RNG deserialize(std::string json);
 };
+

@@ -16,6 +16,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 #include "astrojag.h"
+using namespace astrojag;
 
 // main.cpp
 struct player_s {

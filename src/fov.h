@@ -1,6 +1,8 @@
-// fov algorithms.
+// Field of View
 //===================================================
-
+// Your map object has to implement IFieldOfView in order for these algos to
+// work properly. There are two versions of the FOV code, which use the same
+// algorithm and parameters.
 class FOV;
 
 class IFieldOfView {
@@ -12,6 +14,10 @@ public:
     virtual bool opaque(FOV *context, Point p)=0; // check if FOV is blocked.
 };
 
+// FOV
+//--------------------------
+// immediately visits all the visible cells with a callback function, which
+// is useful for things like "light all the cells that this lantern can see."
 class FOV {
 public:
     // valid callback functions fit this format.
@@ -38,7 +44,10 @@ public:
     void visit(callback cb, int flags, void *userdata);
 };
 
-// cached version of the FOV.
+// FOVMap
+//--------------------------
+// caches the FOV calculations in a permanent data structure you can then
+// query to find out if a given space is visible or not.
 class FOVMap : public FOV {
 protected:
     // map of stuff
@@ -55,3 +64,4 @@ public:
     bool inFOV(Point p) const;
     bool inFOV(int x, int y) const;
 };
+

@@ -1,5 +1,7 @@
 #include "astrojag_internal.h"
 
+namespace astrojag {
+
 const Vector Vector::origin(0.0f,0.0f);
 
 Vector::Vector() : x(0.0f), y(0.0f) {}
@@ -126,6 +128,8 @@ std::ostream& operator<<(std::ostream& os, const Point& b)
 {
    return os << '(' << b.x << ',' << b.y << ')';
 }
+
+}; // namespace astrojag
 
 template <>
 bool std::less<Point>::operator()(const Point& lhs, const Point& rhs) const {

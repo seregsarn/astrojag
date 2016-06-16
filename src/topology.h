@@ -1,5 +1,8 @@
-// topology stuff for libastrojag
+// topology classes
 //===================================================
+// this is a useful Grid type that is used in a few places internally but
+// which seems likely to be useful for constructing client code.
+// someday I'll extend this library to cover non-grid topologies...
 
 template<typename T>
 class Grid {

@@ -1,14 +1,16 @@
 // pathfinding algorithm(s) for libastrojag.
 //===================================================
+// uses A* pathfinding.
 
 class IPathable {
 public:
     virtual ~IPathable()=0; // make destructors get called correctly.
-    //typedef std::function<bool(Point p, int flags)> callback;
     // accessibility information
     virtual Point getDimensions()=0;
-    virtual int heuristic(const Point& src, const Point& dest); // A*-appropriate approximation of the distance from src to dest. Defaults to distance if not provided.
-    virtual bool blocked(Point p, int flags)=0;   // whether or not a tile is passable.
+    // A*-appropriate approximation of the distance from src to dest.
+    // Defaults to distance if not provided.
+    virtual int heuristic(const Point& src, const Point& dest);
+    virtual bool blocked(Point p, int flags)=0; // returns whether or not the tile is passable.
 };
 
 class DijkstraMap {
@@ -36,9 +38,9 @@ public:
     int& at(const Point p);
     void goal(const int x, const int y); // equivalent to at(x,y) = 0;
     void goal(const Point p);            // equivalent to at(p) = 0;
-    // speculative API:
+    // these functions might be useful
     Point randomAbove(Point p);         // randomly select a point "above" this one. If at the top, return the same point.
-    Point randomBelow(Point p);         // same deal in the other direction.
+    Point randomBelow(Point p);         // randomly select a point "below" this one. If at the bottom, return the same point.
 };
 
 //=================================================
@@ -57,10 +59,8 @@ protected:
     std::set<Point> closed;
     Grid<Point> cameFrom;
     Grid<int> bestCost;
-    //std::function<int(IPathable *map, const Point&)> heuristic;
 public:
     Pathfinder(IPathable *map);
-    //Pathfinder(IPathable *map, IPathable::callback cb);
     ~Pathfinder();
     
     shared_ptr<Path> findPath(Point src, Point dst);
@@ -68,3 +68,4 @@ public:
     shared_ptr<Path> findPath(Point src, Point dst, int flags);
     shared_ptr<Path> findPath(int x1, int y1, int x2, int y2, int flags);
 };
+

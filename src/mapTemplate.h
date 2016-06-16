@@ -1,5 +1,8 @@
+// Map Templates
 //=============================================
-// map stuff
+// very basic template system with metadata, basically just ascii art and
+// some dimension info and metadata. I'm trying not to make this too specific
+// and leave the semantics entirely up to the client code.
 
 class MapTemplate {
 public:
@@ -16,3 +19,4 @@ public:
     char& at(const int x, const int y);
     
 };
+

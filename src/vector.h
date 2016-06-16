@@ -1,8 +1,13 @@
+// Vector and Point
+//==========================================================
+// basic types for representing points and vectors. These are used
+// throughout by most of the algorithms.
+
 class Point;
 class Vector;
 
-//================================================
-// Helper class for 2D float vectors.
+//-------------------------------------------------
+// 2D float vectors.
 class Vector {
 public:
     float x, y;
@@ -18,19 +23,6 @@ public:
     float length() const;
     float lengthSquared() const;
     static float dot(const Vector& a, const Vector& b);
-    /*
-    static Vector unit() const;
-    static void add(const Vector& a, const Vector& b, Vector& result);
-    static void divide(const Vector& a, float b, Vector& result);
-    static void divide(const Vector& a, const Vector& b, Vector& result);
-    static void max(const Vector& a, const Vector& b, Vector& result);
-    static void min(const Vector& a, const Vector& b, Vector& result);
-    static void multiply(const Vector& a, float b, Vector& result);
-    static void multiply(const Vector& a, const Vector& b, Vector& result);
-    static void negate(const Vector& a, Vector& result);
-    static void subtract(const Vector& a, const Vector& b, Vector& result);
-    static void lerp(const Vector& start, const Vector& end, float amount, Vector& result);
-    */
     static const Vector origin;
 };
 
@@ -44,8 +36,8 @@ Vector operator/(const Vector& a, float b);
 
 std::ostream& operator<<(std::ostream& os, const Vector& b);
 
-//=================================================
-// Helper class for 2D int vectors.
+//-------------------------------------------------
+// 2D int vectors.
 class Point {
 public:
     int32_t x, y;
@@ -71,5 +63,9 @@ Point operator/(const Point& a, int32_t b);
 
 std::ostream& operator<<(std::ostream& os, const Point& b);
 
+};
+/* this needs to be outside the namespace */
 template <>
-bool std::less<Point>::operator()(const Point& lhs, const Point& rhs) const;
+bool std::less<astrojag::Point>::operator()(const astrojag::Point& lhs, const astrojag::Point& rhs) const;
+namespace astrojag {
+

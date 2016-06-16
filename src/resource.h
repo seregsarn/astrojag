@@ -1,4 +1,7 @@
-// archive-based resource loader
+// archive-based resource loader.
+//==============================================
+// a basic resource loader. Will look for the file in the filesystem first;
+// if it's not found, it looks inside the given archive file.
 
 #define ZIP_EXTERN
 #include "zip.h"

@@ -1,5 +1,7 @@
 #include "astrojag_internal.h"
 
+namespace astrojag {
+
 ThpLogger *ThpLogger::internalLogger = nullptr;
 
 void internalLog(const char *fmt, ...) {
@@ -17,6 +19,7 @@ void ThpLogger::setInternalLogger(ThpLogger *l) {
     internalLogger = l;
 }
 
+}; /* namespace astrojag */
 //================================================================
 
 ThpLogger::ThpLogger() : ThpLogger(stdout) { }

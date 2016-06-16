@@ -1,11 +1,15 @@
-// utility classes for astrojag.
+// general utility classes and functions.
 //===================================================
 
-// bresenham
+//---------------------------------------------------
+// bresenham's algorithm for line-drawing.
 void Line(Point from, Point to, std::function<bool(Point&)> cb);
 void Line(int x1, int y1, int x2, int y2, std::function<bool(Point&)> cb);
 
-// priority queue implementation for pathfinding et al.
+//---------------------------------------------------
+// priority queue implementation, present for pathfinding et al.
+// this implementation isn't super efficient, but for most of my pathfinding
+// test cases it does fine.
 template <typename T>
 class PriorityQueue {
 protected:
@@ -21,7 +25,7 @@ public:
     int size() { return backingStore.size(); }
     void insert(const int priority, const T value);
     void push(const int priority, const T value) { insert(priority, value); }
-    PriorityQueue<T>::Node& popNode();
+    PriorityQueue<T>::Node popNode();
     T pop();
 };
 
@@ -48,7 +52,7 @@ void PriorityQueue<T>::insert(const int pri, const T val) {
 }
 
 template <typename T>
-typename PriorityQueue<T>::Node& PriorityQueue<T>::popNode() {
+typename PriorityQueue<T>::Node PriorityQueue<T>::popNode() {
     int bestP = INT_MAX;
     int bestIdx = -1;
     int idx = 0;
@@ -68,3 +72,4 @@ T PriorityQueue<T>::pop() {
     auto n = popNode();
     return n.value;
 }
+

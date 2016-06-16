@@ -21,6 +21,8 @@ using std::string;
 using std::min;
 
 #include "astrojag.h"
+using namespace astrojag;
 
 extern ThpLogger *internalLogger;
 void internalLog(const char *fmt, ...);
+
