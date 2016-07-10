@@ -1,5 +1,19 @@
+// system-specific stuff.
+#ifdef unix
 #include <stdio.h>
 #include <unistd.h>
+#define CONST_FUNCTION
+#endif
+#ifdef _WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <io.h>
+#define dup _dup
+#define fileno _fileno
+#define fdopen _fdopen
+#define CONST_FUNCTION constexpr
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <math.h>

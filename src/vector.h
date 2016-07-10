@@ -66,6 +66,6 @@ std::ostream& operator<<(std::ostream& os, const Point& b);
 };
 /* this needs to be outside the namespace */
 template <>
-bool std::less<astrojag::Point>::operator()(const astrojag::Point& lhs, const astrojag::Point& rhs) const;
+bool CONST_FUNCTION std::less<astrojag::Point>::operator()(const astrojag::Point& lhs, const astrojag::Point& rhs) const;
 namespace astrojag {
 

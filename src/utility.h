@@ -25,7 +25,7 @@ public:
     int size() { return backingStore.size(); }
     void insert(const int priority, const T value);
     void push(const int priority, const T value) { insert(priority, value); }
-    PriorityQueue<T>::Node popNode();
+    typename PriorityQueue<T>::Node popNode();
     T pop();
 };
 

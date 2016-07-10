@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 #include <unordered_set>
+#include <functional>
 #include "json/jsonxx.h"
 
 namespace astrojag {
-
