@@ -34,6 +34,9 @@ using std::make_shared;
 using std::string;
 using std::min;
 
+#define ZIP_EXTERN
+#include "zip.h"
+
 #include "astrojag.h"
 using namespace astrojag;
 

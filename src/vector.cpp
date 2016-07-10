@@ -51,6 +51,9 @@ bool operator==(const Vector& a, const Vector& b) {
 bool operator!=(const Vector& a, const Vector& b) {
     return (a.x != b.x || a.y != b.y);
 }
+bool operator<(const Vector& a, const Vector& b) {
+    return (a.x < b.x || a.y < b.y);
+}
 Vector operator+(const Vector& a, const Vector& b) {
     return Vector(a.x+b.x, a.y+b.y);
 }
@@ -111,6 +114,9 @@ bool operator==(const Point& a, const Point& b) {
 bool operator!=(const Point& a, const Point& b) {
     return (a.x != b.x || a.y != b.y);
 }
+bool operator<(const Point& a, const Point& b) {
+    return (a.x < b.x ? true : (a.y < b.y ? true : false));
+}
 Point operator+(const Point& a, const Point& b) {
     return Point(a.x+b.x, a.y+b.y);
 }
@@ -130,8 +136,3 @@ std::ostream& operator<<(std::ostream& os, const Point& b)
 }
 
 }; // namespace astrojag
-
-template <>
-bool _AJ_CONST_FUNCTION std::less<Point>::operator()(const Point& lhs, const Point& rhs) const {
-    return (lhs.x < rhs.x ? true : (lhs.y < rhs.y ? true : false));
-}

@@ -28,6 +28,7 @@ public:
 
 bool operator==(const Vector& a, const Vector& b);
 bool operator!=(const Vector& a, const Vector& b);
+bool operator<(const Vector& a, const Vector& b);
 Vector operator+(const Vector& a, const Vector& b);
 Vector operator-(const Vector& a, const Vector& b);
 
@@ -56,16 +57,10 @@ public:
 
 bool operator==(const Point& a, const Point& b);
 bool operator!=(const Point& a, const Point& b);
+bool operator<(const Point& a, const Point& b);
 Point operator+(const Point& a, const Point& b);
 Point operator-(const Point& a, const Point& b);
 Point operator*(const Point& a, int32_t b);
 Point operator/(const Point& a, int32_t b);
 
 std::ostream& operator<<(std::ostream& os, const Point& b);
-
-};
-/* this needs to be outside the namespace */
-template <>
-bool _AJ_CONST_FUNCTION std::less<astrojag::Point>::operator()(const astrojag::Point& lhs, const astrojag::Point& rhs) const;
-namespace astrojag {
-
