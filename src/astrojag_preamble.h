@@ -10,4 +10,12 @@
 #include <functional>
 #include "json/jsonxx.h"
 
+#ifdef unix
+#define _AJ_CONST_FUNCTION
+#endif
+
+#ifdef _WIN32
+#define _AJ_CONST_FUNCTION constexpr
+#endif
+
 namespace astrojag {
