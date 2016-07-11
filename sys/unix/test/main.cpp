@@ -100,7 +100,7 @@ int main(void) {
     //*/
     //log("rng: %s\n", rng.serialize().c_str());
     initialize_curses();
-    shared_ptr<MapTemplate> tpl = make_shared<MapTemplate>("fov.level");
+    shared_ptr<MapTemplate> tpl = make_shared<MapTemplate>("big.level");
     shared_ptr<Map> map = make_shared<Map>(tpl->w, tpl->h);
     for (int y = 0; y < tpl->h; y++)
         for (int x = 0; x < tpl->w; x++)

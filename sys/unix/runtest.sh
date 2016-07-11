@@ -1,3 +1,4 @@
 #!/bin/bash
-cd test
+cd sys/unix/test
 ./itest
+

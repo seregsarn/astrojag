@@ -2,5 +2,5 @@
 
 cp Makefile.root ../../Makefile
 cp Makefile.src ../../src/Makefile
-cp Makefile.test ../../test/Makefile
+cp Makefile.test test/Makefile
 cp runtest.sh ../../
