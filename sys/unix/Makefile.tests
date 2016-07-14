@@ -1,7 +1,7 @@
 SYSTEM=unix
 WINDOW=ncurses
 
-TESTLIST=PointTest VectorTest
+TESTLIST=PointTest VectorTest GridTest UtilTest
 
 # sausage
 HEADERS=../vendor/json/jsonxx.h ../lib/astrojag.h

@@ -32,6 +32,7 @@ Grid<T>::~Grid() {
 
 template<typename T>
 T& Grid<T>::at(const int& x, const int& y) {
+    //TODO: throw an exception if not in bounds?
     return (data[x + (y*w)]);
 }
 
