@@ -16,11 +16,13 @@ DijkstraMap::DijkstraMap(IPathable *map, int fl) {
     w = dims.x;
     h = dims.y;
     data = (int*)malloc(sizeof(int) * w*h);
+    blockCache = (bool*)malloc(sizeof(bool) * w*h);
     clear(INT_MAX);
 }
 
 DijkstraMap::~DijkstraMap() {
     free(data);
+    free(blockCache);
 }
 
 //----------------------------------------------------
@@ -28,6 +30,7 @@ DijkstraMap::~DijkstraMap() {
 void DijkstraMap::clear(int value) {
     for (int i = 0; i < w*h; i++) {
         data[i] = value;
+        blockCache[i] = false;
     }
 }
 
@@ -49,19 +52,30 @@ int DijkstraMap::lowestNeighbor(int x, int y) {
     return ln;
 }
 
+void DijkstraMap::loadCache() {
+    int idx, y, x;
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+            idx = (y * w) + x;
+            blockCache[idx] = host->blocked(Point(x,y), flags);
+        }
+    }
+}
+
 int DijkstraMap::scanStep() {
     int changes = 0;
-    int val, ln;
+    int val, ln, idx;
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            if (host->blocked(Point(x,y), flags)) continue;
-            val = data[(y*w)+x];
+            idx = (y * w) + x;
+            if (blockCache[idx]) continue;
+            val = data[idx];
             ln = lowestNeighbor(x,y);
             // NB: weird construction for this conditional, but most values
             // will start out as INT_MAX and we don't want to do weird shit
             // due to integer overflow.
             if (val > ln && (val - ln) >= 2) {
-                data[(y*w)+x] = ln+1;
+                data[idx] = ln+1;
                 changes++;
             }
         }
@@ -79,6 +93,10 @@ void DijkstraMap::fullScan() {
     do {
         ch = scanStep();
     } while (ch > 0);
+}
+void DijkstraMap::calculate() {
+    loadCache();
+    fullScan();
 }
 
 void DijkstraMap::invert(float coefficient) {
@@ -101,6 +119,10 @@ void DijkstraMap::invert(float coefficient) {
 int& DijkstraMap::at(const Point p) { return at(p.x, p.y); }
 int& DijkstraMap::at(const int x, const int y) {
     return data[((y*w) + x)];
+}
+bool& DijkstraMap::blocked(const Point p) { return blocked(p.x, p.y); }
+bool& DijkstraMap::blocked(const int x, const int y) {
+    return blockCache[((y*w) + x)];
 }
 
 void DijkstraMap::goal(const Point p) { goal(p.x, p.y); }

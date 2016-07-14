@@ -100,7 +100,7 @@ int main(void) {
     //*/
     //log("rng: %s\n", rng.serialize().c_str());
     initialize_curses();
-    shared_ptr<MapTemplate> tpl = make_shared<MapTemplate>("big.level");
+    shared_ptr<MapTemplate> tpl = make_shared<MapTemplate>("fov.level");
     shared_ptr<Map> map = make_shared<Map>(tpl->w, tpl->h);
     for (int y = 0; y < tpl->h; y++)
         for (int x = 0; x < tpl->w; x++)
@@ -198,10 +198,13 @@ int main(void) {
         }
         dmap.clear();
         dmap.goal(you.pos);
-        dmap.fullScan();
+        auto begin = std::chrono::high_resolution_clock::now();
+        dmap.calculate();
+        auto end = std::chrono::high_resolution_clock::now();
+        move(15, 0); printw("dmap scan: %f us\n", (std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count() / 1000.0f));
         flee.clear();
         flee.goal(you.pos);
-        flee.fullScan();
+        flee.calculate();
         flee.invert(1.5);
     }
     shutdown_curses();

@@ -19,18 +19,21 @@ protected:
     int flags;
     int w, h;
     int *data;
+    bool *blockCache;
     // helpers
     bool inBounds(const int x, const int y);
     int lowestNeighbor(int x, int y);
-    int scanStep();    
+    int scanStep();
 public:
     DijkstraMap(IPathable *map, int flags=0);
     ~DijkstraMap();
     Point getDimensions() { return Point(w,h); }
     
     // map-wide operations
-    void clear(int value=INT_MAX);      // max out all the values in the map.
-    void fullScan();                    // perform the smoothing operation on the entire map.
+    void loadCache();                    // load the cache with all the blocked values.
+    void clear(int value=INT_MAX);       // max out all the values in the map.
+    void calculate();                    // load blocking data and compute the map.
+    void fullScan();                     // perform the smoothing operation on the entire map.
     void fullScan(int flags);
     void invert(float coefficient=1.5f); // perform the inversion to get an "avoidance map", e.g. for fleeing.
     // accessors
@@ -38,6 +41,8 @@ public:
     int& at(const Point p);
     void goal(const int x, const int y); // equivalent to at(x,y) = 0;
     void goal(const Point p);            // equivalent to at(p) = 0;
+    bool& blocked(const int x, const int y);  // cached solidity value at (x,y)
+    bool& blocked(const Point p);             // cached solidity value at p
     // these functions might be useful
     Point randomAbove(Point p);         // randomly select a point "above" this one. If at the top, return the same point.
     Point randomBelow(Point p);         // randomly select a point "below" this one. If at the bottom, return the same point.
