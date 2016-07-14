@@ -47,6 +47,33 @@ void drawDM(DijkstraMap *dm) {
     }
 }
 
+void drawDM2(DijkstraMap *dm) {
+    int v;
+    Point grad;
+    Point dim = dm->getDimensions();
+    for (int y = 0; y < dim.y; y++) {
+        move(y,0);
+        for (int x = 0; x < dim.x; x++) {
+            v = dm->at(x,y);
+            grad = dm->gradient(Point(x,y));
+            char dir = '.';
+            if (grad.x < 0 && grad.y < 0) dir = '`';
+            if (grad.x == 0 && grad.y < 0) dir = '^';
+            if (grad.x > 0 && grad.y < 0) dir = '/';
+
+            if (grad.x < 0 && grad.y == 0) dir = '<';
+            if (grad.x > 0 && grad.y == 0) dir = '>';
+
+            if (grad.x < 0 && grad.y > 0) dir = 'L';
+            if (grad.x == 0 && grad.y > 0) dir = 'v';
+            if (grad.x > 0 && grad.y > 0) dir = '\\';
+            // draw
+            if (v == INT_MAX || v == INT_MIN || (grad.x == 0 && grad.y == 0)) move(y,x+1);
+            else addch(dir);
+        }
+    }
+}
+
 void drawPath(shared_ptr<Map> m, Point from, Point to) {
     // stuh!
     Pathfinder pf(m.get());
@@ -111,8 +138,8 @@ int main(void) {
     while (!quit) {
         debugDraw(map.get());
         drawFov(map.get(), you.pos);
-        if (debugDM) drawDM(&dmap);
-        if (debugFlee) drawDM(&flee);
+        if (debugDM) drawDM2(&dmap);
+        if (debugFlee) drawDM2(&flee);
         if (debugPath) {
             if (debugLine) {
                 drawLine(you.pos, you.cursor);

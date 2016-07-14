@@ -38,6 +38,7 @@ bool DijkstraMap::inBounds(int x, int y) {
     if (x < 0 || y < 0 || x >= w || y >= h) return false;
     return true;
 }
+bool DijkstraMap::inBounds(const Point& p) { return inBounds(p.x,p.y); }
 
 int DijkstraMap::lowestNeighbor(int x, int y) {
     int ln = INT_MAX;
@@ -158,6 +159,25 @@ Point DijkstraMap::randomBelow(Point p) {
         }
     }
     return best;
+}
+
+Point DijkstraMap::gradient(const Point& p) {
+    Point gradient(0,0);
+    int here = at(p);
+    for (int i = 0; i < 8; i++) {
+        Point n = p + neighbors[i];
+        if (!inBounds(n)) continue;
+        if (at(n) == INT_MAX || at(n) == INT_MIN) {
+            int there = lowestNeighbor(n.x,n.y) + 1;
+            if (there < here) gradient += neighbors[i];
+            else if (there > here) gradient -= neighbors[i];
+        } else if (at(n) < here) {
+            gradient += neighbors[i];
+        } else if (at(n) > here) {
+            gradient -= neighbors[i];
+        }
+    }
+    return gradient;
 }
 
 

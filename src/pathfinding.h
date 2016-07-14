@@ -22,6 +22,7 @@ protected:
     bool *blockCache;
     // helpers
     bool inBounds(const int x, const int y);
+    bool inBounds(const Point& p);
     int lowestNeighbor(int x, int y);
     int scanStep();
 public:
@@ -46,6 +47,7 @@ public:
     // these functions might be useful
     Point randomAbove(Point p);         // randomly select a point "above" this one. If at the top, return the same point.
     Point randomBelow(Point p);         // randomly select a point "below" this one. If at the bottom, return the same point.
+    Point gradient(const Point& p);    // find the gradient vector at this point.
 };
 
 //=================================================
