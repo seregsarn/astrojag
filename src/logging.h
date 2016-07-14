@@ -3,18 +3,18 @@
 // basic support for logging debug information to a file. the first one that
 // gets created, if any, will be used for library error messages too.
 
-class ThpLogger {
+class Logger {
 protected:
     friend void internalLog(const char *c, ...);
-    static ThpLogger *internalLogger;
+    static Logger *internalLogger;
     FILE *logFile;
 public:
-    static void setInternalLogger(ThpLogger *l);
-    ThpLogger(); // default to stdout
-    ThpLogger(FILE *fp);
-    ThpLogger(const char *filename);
-    ThpLogger(const char *filename, bool overwrite);
-    ~ThpLogger();
+    static void setInternalLogger(Logger *l);
+    Logger(); // default to stdout
+    Logger(FILE *fp);
+    Logger(const char *filename);
+    Logger(const char *filename, bool overwrite);
+    ~Logger();
 
     void print(const char *fmt, ...);
     void print(std::string str);

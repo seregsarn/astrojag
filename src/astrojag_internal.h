@@ -40,6 +40,6 @@ using std::min;
 #include "astrojag.h"
 using namespace astrojag;
 
-extern ThpLogger *internalLogger;
+extern Logger *internalLogger;
 void internalLog(const char *fmt, ...);
 
