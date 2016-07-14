@@ -6,6 +6,19 @@ void Line(int x1, int y1, int x2, int y2, std::function<bool(Point&)> cb) {
     Point from(x1,y1), to(x2, y2);
     Line(from,to,cb);
 }
+void Line(int x1, int y1, int x2, int y2, std::function<void(Point&)> cb) {
+    Point from(x1,y1), to(x2, y2);
+    Line(from,to,[cb](Point& p) {
+        cb(p);
+        return true;
+    });
+}
+void Line(Point from, Point to, std::function<void(Point&)> cb) {
+    Line(from, to, [cb](Point& p) -> bool {
+        cb(p);
+        return true;
+    });
+}
 
 void Line(Point from, Point to, std::function<bool(Point&)> cb) {
     float frac = 0.0f;

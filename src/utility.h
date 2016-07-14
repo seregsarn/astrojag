@@ -5,6 +5,8 @@
 // bresenham's algorithm for line-drawing.
 void Line(Point from, Point to, std::function<bool(Point&)> cb);
 void Line(int x1, int y1, int x2, int y2, std::function<bool(Point&)> cb);
+void Line(Point from, Point to, std::function<void(Point&)> cb);
+void Line(int x1, int y1, int x2, int y2, std::function<void(Point&)> cb);
 
 //---------------------------------------------------
 // priority queue implementation, present for pathfinding et al.
