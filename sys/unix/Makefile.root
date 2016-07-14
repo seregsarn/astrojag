@@ -4,10 +4,10 @@ lib: .FORCE
 	( cd src; make all )
 
 test: .FORCE
-	( cd sys/unix/test; make all )
+	( cd tests; make all )
 
 all: lib test
 
 clean:
 	( cd src; make clean )
-	( cd sys/unix/test; make clean )
+	( cd tests; make clean )
