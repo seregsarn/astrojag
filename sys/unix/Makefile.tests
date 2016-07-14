@@ -1,0 +1,42 @@
+SYSTEM=unix
+WINDOW=ncurses
+
+TESTLIST=PointTest VectorTest
+
+# sausage
+HEADERS=../vendor/json/jsonxx.h ../lib/astrojag.h
+LIB=libastrojag_static.a
+LIBPATH=../lib/$(LIB)
+OBJLIST=$(addsuffix .o, $(TESTLIST)) gtest-all.o gtest_main.o
+OBJDIR=obj
+OBJS=$(addprefix $(OBJDIR)/, $(OBJLIST))
+
+CC=clang++
+CFLAGS=-Wextra --std=c++11 -stdlib=libc++ -c -O3 -g -D$(SYSTEM) -D$(WINDOW) -I../lib -I../vendor -I. -Wdeprecated-writable-strings
+LD=clang++
+LDFLAGS=-lncurses -lpthread -stdlib=libc++
+
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.cpp $(HEADERS) | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o obj/$*.o
+
+$(OBJDIR)/gtest_main.o: ../vendor/gtest/gtest_main.cc
+	$(CC) $(CFLAGS) -c $< -o $*.o
+$(OBJDIR)/gtest-all.o: ../vendor/gtest/gtest-all.cc
+	$(CC) $(CFLAGS) -c $< -o $*.o
+
+$(OBJDIR)/jsonxx.o: ../vendor/json/jsonxx.cc $(HEADERS)
+	$(CC) $(CFLAGS) -c ../vendor/json/jsonxx.cc -o obj/jsonxx.o
+	
+testrunner: $(OBJS)
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBPATH) -o TestRunner
+	
+all: testrunner
+	./TestRunner
+
+clean:
+	@rm -f $(OBJDIR)/*.o
+	@rm -f TestRunner
+	-@rmdir $(OBJDIR) 2> /dev/null || true
