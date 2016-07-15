@@ -1,7 +1,7 @@
 SYSTEM=unix
 WINDOW=ncurses
 
-TESTLIST=PointTest VectorTest GridTest UtilTest
+TESTLIST=$(basename $(shell find . -name '*.cpp'))
 
 # sausage
 HEADERS=../vendor/json/jsonxx.h ../lib/astrojag.h
