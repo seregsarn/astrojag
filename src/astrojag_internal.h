@@ -2,7 +2,6 @@
 #ifdef unix
 #include <stdio.h>
 #include <unistd.h>
-#define _AJ_CONST_FUNCTION
 #endif
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
@@ -11,7 +10,6 @@
 #define dup _dup
 #define fileno _fileno
 #define fdopen _fdopen
-#define _AJ_CONST_FUNCTION constexpr
 #endif
 
 #include <stdlib.h>

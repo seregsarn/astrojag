@@ -1,0 +1,7 @@
+# unix build stuff
+/Makefile
+/src/Makefile
+/src/objs/
+/tests/TestRunner
+/tests/Makefile
+/tests/obj/
