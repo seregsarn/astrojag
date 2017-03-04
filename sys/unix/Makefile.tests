@@ -36,6 +36,9 @@ testrunner: $(OBJS)
 all: testrunner
 	./TestRunner
 
+view: testrunner
+	./TestRunner --gtest_color=yes | $(PAGER)
+
 clean:
 	@rm -f $(OBJDIR)/*.o
 	@rm -f TestRunner

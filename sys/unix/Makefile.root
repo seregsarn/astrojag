@@ -6,7 +6,7 @@ lib: .FORCE
 test: .FORCE
 	( cd tests; make all )
 
-all: lib test
+all: lib
 
 clean:
 	( cd src; make clean )

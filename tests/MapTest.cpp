@@ -10,7 +10,7 @@ using std::make_shared;
 
 TEST(MapTest, creation) {
     auto map = TestingMap::makeTestMap();
-    map->print();
+    //map->print();
     EXPECT_EQ(map->tiles.at(3,3), 0);
     EXPECT_EQ(map->tiles.at(7,7), 0);
     EXPECT_EQ(map->tiles.at(5,5), 1);
